@@ -26,4 +26,4 @@ def root():
 
 application = DispatcherMiddleware(root_app, {"/oidc": oidc_app, "/openid": openid_app})
 
-application.wsgi_app = ProxyFix(application.wsgi_app, x_proto=1, x_host=1)
+application = ProxyFix(application, x_proto=1, x_host=1)
