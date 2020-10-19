@@ -2,8 +2,8 @@ import flask
 from flask_openid import OpenID
 
 app = flask.Flask(__name__)
-app.config.from_object('test_auth.defaults')
-app.config.from_envvar('TESTAUTH_SETTINGS')
+app.config.from_object("test_auth.defaults")
+app.config.from_envvar("TESTAUTH_SETTINGS")
 
 oid = OpenID(app, "/var/tmp/openidstore", safe_roots=[])
 
@@ -15,7 +15,7 @@ def before_request():
 
 @app.route("/")
 def home():
-    return render_template("home.html",)
+    return flask.render_template("home.html",)
 
 
 @oid.after_login
@@ -30,7 +30,7 @@ def do_login(resp):
 @oid.loginhandler
 def login():
     if flask.session.get("user"):
-        return redirect(flask.url_for(".home"))
+        return flask.redirect(flask.url_for(".home"))
     return oid.try_login(
         app.config["OPENID_ENDPOINT"],
         ask_for=["email", "nickname"],
