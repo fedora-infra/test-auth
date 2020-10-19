@@ -1,4 +1,5 @@
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.middleware.proxy_fix import ProxyFix
 from .oidc import app as oidc_app
 from .openid import app as openid_app
 
@@ -23,3 +24,5 @@ application = DispatcherMiddleware(root_app, {
     "/oidc": oidc_app,
     '/openid': openid_app
 })
+
+application.wsgi_app = ProxyFix(application.wsgi_app, x_proto=1, x_host=1)
