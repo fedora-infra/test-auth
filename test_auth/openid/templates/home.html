@@ -1,0 +1,20 @@
+{% extends  "main.html" %}
+{% block content %}
+
+{% if OIDC.user_loggedin %}
+<p>You are now logged in. <a href="{{ url_for(".logout") }}">Logout</a>.</p>
+
+<p>Data:</p>
+<pre>
+    {{ session['user'] }}
+</pre>
+
+{% else %}
+
+<p>
+    Landing page, try to <a href="{{ url_for(".login") }}">login</a>.
+</p>
+
+{% endif %}
+
+{% endblock %}
