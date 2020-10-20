@@ -1,3 +1,5 @@
+from pprint import pformat
+
 import flask
 from flask_oidc import OpenIDConnect
 
@@ -20,7 +22,8 @@ def before_request():
 
 @app.route("/")
 def home():
-    return flask.render_template("home.html", OIDC=OIDC)
+    user_info = OIDC._retrieve_userinfo()
+    return flask.render_template("home.html", OIDC=OIDC, user_info=pformat(user_info))
 
 
 @app.route("/login")
