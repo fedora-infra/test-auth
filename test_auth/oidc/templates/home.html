@@ -1,15 +1,12 @@
 {% extends  "main.html" %}
 {% block content %}
 
-{% if OIDC.user_loggedin %}
+{% if user_info %}
 <p>You are now logged in. <a href="{{ url_for(".logout") }}">Logout</a>.</p>
 
 <p>Data:</p>
 <pre>
-    Email: {{OIDC.user_getfield('email')}}
-    Username: {{OIDC.user_getfield('preferred_username')}}
-    Timezone: {{OIDC.user_getfield('zoneinfo')}}
-    User info: {{ user_info }}
+    {{ user_info }}
 </pre>
 
 {% else %}
