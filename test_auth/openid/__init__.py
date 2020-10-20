@@ -36,8 +36,8 @@ def login():
         return flask.redirect(flask.url_for(".home"))
     return oid.try_login(
         app.config["OPENID_ENDPOINT"],
-        ask_for=["email", "nickname", "fullname"],
-        ask_for_optional=["language", "timezone"],
+        ask_for=app.config["OPENID_ASK_FOR"],
+        ask_for_optional=app.config["OPENID_ASK_FOR_OPTIONAL"],
     )
 
 

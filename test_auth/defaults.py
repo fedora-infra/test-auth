@@ -7,4 +7,8 @@ OIDC_SCOPES = [
     "https://id.fedoraproject.org/scope/groups",
     "https://id.fedoraproject.org/scope/agreements",
 ]
+
+# OpenID
 OPENID_ENDPOINT = "https://id.fedoraproject.org/openid/"
+OPENID_ASK_FOR = ["email", "nickname", "fullname"]
+OPENID_ASK_FOR_OPTIONAL = ["language", "timezone"]

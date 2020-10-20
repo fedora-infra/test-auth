@@ -13,6 +13,8 @@ In the configuration file you can set:
 - `OIDC_CLIENT_SECRETS`: the path to the `client_secrets.json` file for OIDC auth
 - `OIDC_SCOPES`: the list of OIDC scopes to request from the server
 - `OPENID_ENDPOINT`: the URL of the OpenID server endpoint
+- `OPENID_ASK_FOR`: the list of attributes to request from the server
+- `OPENID_ASK_FOR_OPTIONAL`: the list of attributes to optionaly request
 
 ## OIDC
 
