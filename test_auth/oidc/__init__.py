@@ -22,7 +22,10 @@ def before_request():
 
 @app.route("/")
 def home():
-    user_info = OIDC._retrieve_userinfo()
+    if OIDC.user_loggedin:
+        user_info = OIDC._retrieve_userinfo()
+    else:
+        user_info = None
     return flask.render_template("home.html", OIDC=OIDC, user_info=pformat(user_info))
 
 
