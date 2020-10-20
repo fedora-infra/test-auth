@@ -15,7 +15,7 @@ def before_request():
 
 @app.route("/")
 def home():
-    return flask.render_template("home.html",)
+    return flask.render_template("home.html")
 
 
 @oid.after_login
@@ -36,6 +36,7 @@ def login():
         ask_for=["email", "nickname", "fullname"],
         ask_for_optional=["language", "timezone"],
     )
+
 
 @app.route("/logout")
 def logout():
