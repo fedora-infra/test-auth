@@ -4,9 +4,9 @@
 {% if session.get("user") %}
 <p>You are now logged in. <a href="{{ url_for(".logout") }}">Logout</a>.</p>
 
-<p>Data:</p>
+<p>User:</p>
 <pre>
-    {{ session['user'] }}
+    {{ user }}
 </pre>
 
 {% else %}

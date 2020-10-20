@@ -1,3 +1,5 @@
+from pprint import pformat
+
 import flask
 from flask_openid import OpenID
 
@@ -15,7 +17,8 @@ def before_request():
 
 @app.route("/")
 def home():
-    return flask.render_template("home.html")
+    user = pformat(flask.session.get("user"))
+    return flask.render_template("home.html", user=user)
 
 
 @oid.after_login
