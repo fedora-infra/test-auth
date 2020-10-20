@@ -37,9 +37,8 @@ def login():
         ask_for_optional=["language", "timezone"],
     )
 
-
 @app.route("/logout")
 def logout():
     flask.session["user"] = None
-    flask.flash("You have been logged out")
+    flask.flash("You have been logged out", "info")
     return flask.redirect(flask.url_for(".home"))

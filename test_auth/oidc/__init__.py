@@ -36,5 +36,5 @@ def login():
 def logout():
     if OIDC.user_loggedin:
         OIDC.logout()
-        flask.flash("You have been logged out")
+        flask.flash("You have been logged out", "info")
     return flask.redirect(flask.url_for(".home"))
