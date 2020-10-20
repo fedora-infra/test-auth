@@ -1,7 +1,7 @@
 {% extends  "main.html" %}
 {% block content %}
 
-{% if OIDC.user_loggedin %}
+{% if session.get("user") %}
 <p>You are now logged in. <a href="{{ url_for(".logout") }}">Logout</a>.</p>
 
 <p>Data:</p>
