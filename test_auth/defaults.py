@@ -6,12 +6,21 @@ OIDC_SCOPES = [
     "profile",
     "https://id.fedoraproject.org/scope/groups",
     "https://id.fedoraproject.org/scope/agreements",
+    "https://id.fedoraproject.org/scope/fas-attributes",
 ]
 
 # OpenID
 OPENID_ENDPOINT = "https://id.fedoraproject.org/openid/"
 OPENID_ASK_FOR = ["email", "nickname", "fullname"]
-OPENID_ASK_FOR_OPTIONAL = ["language", "timezone", "website", "blog", "image"]
+OPENID_ASK_FOR_OPTIONAL = [
+    "language",
+    "timezone",
+    "website",
+    "blog",
+    "image",
+    "ssh_key",
+    "gpg_keyid",
+]
 
 
 # FAS OpenID
