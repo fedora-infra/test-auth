@@ -1,4 +1,8 @@
 {% extends  "main.html" %}
+
+{% block title %}Test OpenID auth{% endblock %}
+
+
 {% block content %}
 
 {% if session.get("user") %}
@@ -6,7 +10,7 @@
 
 <p>User:</p>
 <pre>
-    {{ user }}
+{{ user }}
 </pre>
 
 {% else %}

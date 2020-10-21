@@ -1,4 +1,8 @@
 {% extends  "main.html" %}
+
+{% block title %}Test OIDC auth{% endblock %}
+
+
 {% block content %}
 
 {% if user_info %}
@@ -6,7 +10,7 @@
 
 <p>Data:</p>
 <pre>
-    {{ user_info }}
+{{ user_info }}
 </pre>
 
 {% else %}

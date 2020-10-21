@@ -2,10 +2,9 @@ from pprint import pformat
 
 import flask
 from flask_openid import OpenID
+from test_auth.utilities import create_flask_app
 
-app = flask.Flask(__name__)
-app.config.from_object("test_auth.defaults")
-app.config.from_envvar("TESTAUTH_SETTINGS")
+app = create_flask_app(__name__)
 
 oid = OpenID(app, "/var/tmp/openidstore", safe_roots=[])
 

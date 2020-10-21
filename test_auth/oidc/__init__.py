@@ -2,13 +2,10 @@ from pprint import pformat
 
 import flask
 from flask_oidc import OpenIDConnect
+from test_auth.utilities import create_flask_app
 
 # Set up Flask application
-app = flask.Flask(__name__)
-
-app.config.from_object("test_auth.defaults")
-app.config.from_envvar("TESTAUTH_SETTINGS")
-
+app = create_flask_app(__name__)
 
 # Set up FAS extension
 OIDC = OpenIDConnect(app, credentials_store=flask.session)
@@ -24,9 +21,10 @@ def before_request():
 def home():
     if OIDC.user_loggedin:
         user_info = OIDC._retrieve_userinfo()
+        user_info = pformat(user_info)
     else:
         user_info = None
-    return flask.render_template("home.html", OIDC=OIDC, user_info=pformat(user_info))
+    return flask.render_template("home.html", user_info=user_info)
 
 
 @app.route("/login")
