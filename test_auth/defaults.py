@@ -12,3 +12,7 @@ OIDC_SCOPES = [
 OPENID_ENDPOINT = "https://id.fedoraproject.org/openid/"
 OPENID_ASK_FOR = ["email", "nickname", "fullname"]
 OPENID_ASK_FOR_OPTIONAL = ["language", "timezone", "website", "blog", "image"]
+
+
+# FAS OpenID
+FAS_OPENID_ENDPOINT = "https://id.fedoraproject.org/openid/"
