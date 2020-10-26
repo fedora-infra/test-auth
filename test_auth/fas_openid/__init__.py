@@ -15,7 +15,10 @@ def before_request():
 
 @app.route("/")
 def home():
-    user_data = pformat(flask.g.fas_user)
+    if flask.g.fas_user:
+        user_data = pformat(flask.g.fas_user)
+    else:
+        user_data = None
     return flask.render_template("home.html", user_data=user_data)
 
 

@@ -16,8 +16,11 @@ def before_request():
 
 @app.route("/")
 def home():
-    user = pformat(flask.session.get("user"))
-    return flask.render_template("home.html", user=user)
+    try:
+        user_data = pformat(flask.g.openid_user)
+    except AttributeError:
+        user_data = None
+    return flask.render_template("home.html", user_data=user_data)
 
 
 @oid.after_login
@@ -26,14 +29,14 @@ def do_login(resp):
     for attr in app.config["OPENID_ASK_FOR"] + app.config["OPENID_ASK_FOR_OPTIONAL"]:
         user[attr] = getattr(resp, attr)
     user["extensions"] = resp.extensions
-    flask.session["user"] = user
+    flask.g.openid_user = user
     return flask.redirect(flask.url_for(".home"))
 
 
 @app.route("/login")
 @oid.loginhandler
 def login():
-    if flask.session.get("user"):
+    if getattr(flask.g, "openid_user", None):
         return flask.redirect(flask.url_for(".home"))
     return oid.try_login(
         app.config["OPENID_ENDPOINT"],
@@ -44,6 +47,6 @@ def login():
 
 @app.route("/logout")
 def logout():
-    flask.session.pop("user", None)
+    flask.g.openid_user = None
     flask.flash("You have been logged out", "info")
     return flask.redirect(flask.url_for(".home"))

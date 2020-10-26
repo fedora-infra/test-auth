@@ -20,11 +20,10 @@ def before_request():
 @app.route("/")
 def home():
     if OIDC.user_loggedin:
-        user_info = OIDC._retrieve_userinfo()
-        user_info = pformat(user_info)
+        user_data = pformat(OIDC._retrieve_userinfo())
     else:
-        user_info = None
-    return flask.render_template("home.html", user_info=user_info)
+        user_data = None
+    return flask.render_template("home.html", user_data=user_data)
 
 
 @app.route("/login")

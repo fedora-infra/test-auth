@@ -3,23 +3,3 @@
 {% block title %}Test OIDC auth{% endblock %}
 
 {% block nav_oidc %}active{% endblock %}
-
-{% block content %}
-
-{% if user_info %}
-<p>You are now logged in. <a href="{{ url_for(".logout") }}">Logout</a>.</p>
-
-<p>Data:</p>
-<pre>
-{{ user_info }}
-</pre>
-
-{% else %}
-
-<p>
-    Landing page, try to <a href="{{ url_for(".login") }}">login</a>.
-</p>
-
-{% endif %}
-
-{% endblock %}

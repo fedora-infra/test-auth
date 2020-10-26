@@ -3,23 +3,3 @@
 {% block title %}Test OpenID auth{% endblock %}
 
 {% block nav_openid %}active{% endblock %}
-
-{% block content %}
-
-{% if session.get("user") %}
-<p>You are now logged in. <a href="{{ url_for(".logout") }}">Logout</a>.</p>
-
-<p>User:</p>
-<pre>
-{{ user }}
-</pre>
-
-{% else %}
-
-<p>
-    Landing page, try to <a href="{{ url_for(".login") }}">login</a>.
-</p>
-
-{% endif %}
-
-{% endblock %}

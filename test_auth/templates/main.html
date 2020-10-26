@@ -57,7 +57,21 @@
     {% endif %}
     {% endwith %}
 
-    <div class="container p-3">{% block content %}{% endblock %}</div>
+    <div class="container p-3">
+    {% block content %}
+
+    {% if user_data %}
+      <p>You are now logged in. <a href="{{ url_for(".logout") }}">Logout</a>.</p>
+      <p>User:</p>
+      <pre>{{ user_data }}</pre>
+    {% else %}
+      <p>
+        Landing page, try to <a href="{{ url_for(".login") }}">login</a>.
+      </p>
+    {% endif %}
+
+    {% endblock %}
+    </div>
 
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
