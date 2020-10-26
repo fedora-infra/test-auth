@@ -18,8 +18,6 @@ OPENID_ASK_FOR_OPTIONAL = [
     "website",
     "blog",
     "image",
-    "ssh_key",
-    "gpg_keyid",
 ]
 
 
