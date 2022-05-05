@@ -15,7 +15,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "flask",
-        "flask_oidc",
+        "flask_oidc @ git+https://github.com/fedora-infra/flask-oidc.git@authlib_implementation#egg=flask_oidc"
         "flask_openid",
         "python-fedora",
         "python-openid-cla",
