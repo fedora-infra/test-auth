@@ -1,8 +1,9 @@
 from pprint import pformat
 
 import flask
-from flask_oidc import OpenIDConnect
+#from flask_oidc import OpenIDConnect
 from test_auth.utilities import create_flask_app
+from test_auth.flask_oidc import OpenIDConnect
 
 # Set up Flask application
 app = create_flask_app(__name__)
