@@ -71,7 +71,7 @@ class OpenIDConnect:
             if token:
                 if session.get("token")["expires_at"] - 60 < int(time.time()):
                     self.logout()
-        except AttributeError:
+        except Exception:
             session.pop("token", None)
             session.pop("userinfo", None)
             raise
@@ -106,12 +106,15 @@ class OpenIDConnect:
         if userinfo:
             return userinfo
         else:
-            resp = self.oauth.oidc.get(
-                current_app.config["OIDC_USERINFO_URL"], token=token
-            )
-            userinfo = resp.json()
-            session["userinfo"] = userinfo
-            return userinfo
+            try:
+                resp = self.oauth.oidc.get(
+                    current_app.config["OIDC_USERINFO_URL"], token=token
+                )
+                userinfo = resp.json()
+                session["userinfo"] = userinfo
+                return userinfo
+            except Exception:
+                raise
 
     def require_login(self, view_func):
         """
@@ -126,7 +129,9 @@ class OpenIDConnect:
         @wraps(view_func)
         def decorated(*args, **kwargs):
             if session.get("token") is None:
-                redirect_uri = url_for("_oidc_callback", _scheme='https', _external=True)
+                redirect_uri = url_for(
+                    "_oidc_callback", _scheme="https", _external=True
+                )
                 return self.oauth.oidc.authorize_redirect(redirect_uri)
             return view_func(*args, **kwargs)
 
