@@ -53,8 +53,7 @@ class OpenIDConnect:
         app.after_request(self._after_request)
 
     def _before_request(self):
-        self.update_token()
-        # token = session.get("token")
+        self.check_token_expiry()
 
     def _after_request(self, response):
         return response
@@ -66,16 +65,12 @@ class OpenIDConnect:
             raise
         return redirect("/")
 
-    def update_token(self):
+    def check_token_expiry(self):
         try:
             token = session.get("token")
             if token:
                 if session.get("token")["expires_at"] - 60 < int(time.time()):
-                    oatoken = self.oauth.oidc.fetch_access_token(
-                        refresh_token=session.get("token")["refresh_token"],
-                        grant_type="refresh_token",
-                    )
-                    session.get("token").update(oatoken)
+                    self.logout()
         except AttributeError:
             session.pop("token", None)
             session.pop("userinfo", None)
