@@ -53,7 +53,7 @@ class OpenIDConnect:
             name="oidc",
             server_metadata_url=app.config["OIDC_SERVER_METADATA_URL"],
             client_kwargs={
-                "scope": " ".join(app.config["OIDC_SCOPES"]),
+                "scope": app.config["OIDC_SCOPES"],
                 "token_endpoint_auth_method": app.config["OIDC_CLIENT_AUTH_METHOD"],
             },
         )
