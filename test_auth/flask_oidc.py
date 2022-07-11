@@ -25,17 +25,12 @@ class OpenIDConnect:
 
         self.oauth = OAuth(app)
 
-# TODO need to think a little abou tthis oidc realm config
-
-        app.config.setdefault("OIDC_OPENID_REALM", "/oidc_callback")
+        app.config.setdefault("OIDC_OPENID_CALLBACK", "/oidc_callback")
         app.config.setdefault("OIDC_CLIENT_ID", self.client_secrets["client_id"])
         app.config.setdefault(
             "OIDC_SERVER_METADATA_URL",
             f"{self.client_secrets['issuer']}/.well-known/openid-configuration",
         )
-
-# TODO build the userinfo uri from the issuer uri
-
         app.config.setdefault("OIDC_USERINFO_URL", self.client_secrets["userinfo_uri"])
         app.config.setdefault(
             "OIDC_CLIENT_SECRET", self.client_secrets.get("client_secret")
@@ -54,7 +49,7 @@ class OpenIDConnect:
                 "token_endpoint_auth_method": app.config["OIDC_CLIENT_AUTH_METHOD"],
             },
         )
-        app.route(app.config["OIDC_OPENID_REALM"])(self._oidc_callback)
+        app.route(app.config["OIDC_OPENID_CALLBACK"])(self._oidc_callback)
         app.before_request(self._before_request)
         app.after_request(self._after_request)
 
