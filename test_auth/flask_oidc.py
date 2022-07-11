@@ -42,13 +42,13 @@ class OpenIDConnect:
         self, app=None, credentials_store=None, http=None, time=None, urandom=None
     ):
 
-        self.oauth = OAuth(app)
-
         app.config.from_file(app.config["OIDC_CLIENT_SECRETS"], load=json.load)
         app.config.setdefault(
             "OIDC_SERVER_METADATA_URL",
-            f"{self.client_secrets['issuer']}/.well-known/openid-configuration",
+            f"{app.config['OIDC_ISSUER']}/.well-known/openid-configuration",
         )
+
+        self.oauth = OAuth(app)
         self.oauth.register(
             name="oidc",
             server_metadata_url=app.config["OIDC_SERVER_METADATA_URL"],
@@ -105,10 +105,6 @@ class OpenIDConnect:
         :returns: The contents of the UserInfo endpoint.
         :rtype: dict
         """
-        if "userinfo_uri" not in self.client_secrets:
-            logger.debug("Userinfo uri not specified")
-            raise AssertionError("UserInfo URI not specified")
-
         # Cache the info from this request
         token = session.get("token")
         userinfo = session.get("userinfo")
