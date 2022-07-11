@@ -1,3 +1,29 @@
+# Copyright (c) 2014-2015, Erica Ehrhardt
+# Copyright (c) 2016, Patrick Uiterwijk <patrick@puiterwijk.org>
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
 from authlib.integrations.flask_client import OAuth
 import time
 import logging
@@ -10,37 +36,19 @@ __all__ = ["OpenIDConnect"]
 logger = logging.getLogger(__name__)
 
 
-def _json_loads(content):
-    if not isinstance(content, str):
-        content = content.decode("utf-8")
-    return json.loads(content)
-
 
 class OpenIDConnect:
     def __init__(
         self, app=None, credentials_store=None, http=None, time=None, urandom=None
     ):
-        secrets = self.load_secrets(app)
-        self.client_secrets = list(secrets.values())[0]
 
         self.oauth = OAuth(app)
 
-        app.config.setdefault("OIDC_OPENID_CALLBACK", "/oidc_callback")
-        app.config.setdefault("OIDC_CLIENT_ID", self.client_secrets["client_id"])
+        app.config.from_file(app.config["OIDC_CLIENT_SECRETS"], load=json.load)
         app.config.setdefault(
             "OIDC_SERVER_METADATA_URL",
             f"{self.client_secrets['issuer']}/.well-known/openid-configuration",
         )
-        app.config.setdefault("OIDC_USERINFO_URL", self.client_secrets["userinfo_uri"])
-        app.config.setdefault(
-            "OIDC_CLIENT_SECRET", self.client_secrets.get("client_secret")
-        )
-        if self.client_secrets.get("scopes"):
-            app.config.setdefault("OIDC_SCOPES", self.client_secrets.get("scopes"))
-        else:
-            app.config.setdefault("OIDC_SCOPES", "openid profile email")
-
-        app.config.setdefault("OIDC_CLIENT_AUTH_METHOD", "client_secret_post")
         self.oauth.register(
             name="oidc",
             server_metadata_url=app.config["OIDC_SERVER_METADATA_URL"],
@@ -156,10 +164,3 @@ class OpenIDConnect:
         session.pop("userinfo", None)
         return redirect("/")
 
-    def load_secrets(self, app):
-        # Load client_secrets.json to pre-initialize some configuration
-        content = app.config["OIDC_CLIENT_SECRETS"]
-        if isinstance(content, dict):
-            return content
-        else:
-            return _json_loads(open(content, "r").read())
