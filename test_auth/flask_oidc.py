@@ -51,13 +51,13 @@ class OpenIDConnect:
         secrets = self.load_secrets(app)
         self.client_secrets = list(secrets.values())[0]
 
-        app.config.setdefault("OIDC_ISSUER") = self.client_secrets["issuer"]
-        app.config.setdefault("OIDC_CLIENT_ID") = self.client_secrets["client_id"]
-        app.config.setdefault("OIDC_CLIENT_SECRET") = self.client_secrets["client_secret"]
-        app.config.setdefault("OIDC_USERINFO_URL") = self.client_secrets["userinfo_uri"]
-        app.config.setdefault("OIDC_SCOPES") = "openid profile email"
-        app.config.setdefault("OIDC_CLIENT_AUTH_METHOD") = "client_secret_post"
-        app.config.setdefault("OIDC_OPENID_CALLBACK") = "/oidc_callback"
+        app.config.setdefault("OIDC_ISSUER", self.client_secrets["issuer"])
+        app.config.setdefault("OIDC_CLIENT_ID", self.client_secrets["client_id"])
+        app.config.setdefault("OIDC_CLIENT_SECRET", self.client_secrets["client_secret"])
+        app.config.setdefault("OIDC_USERINFO_URL", self.client_secrets["userinfo_uri"])
+        app.config.setdefault("OIDC_SCOPES", "openid profile email")
+        app.config.setdefault("OIDC_CLIENT_AUTH_METHOD", "client_secret_post")
+        app.config.setdefault("OIDC_OPENID_CALLBACK", "/oidc_callback")
 
         #app.config.from_file(app.config["OIDC_CLIENT_SECRETS"], load=json.load)
         app.config.setdefault(
