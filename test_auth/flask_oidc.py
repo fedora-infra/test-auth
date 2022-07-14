@@ -35,14 +35,31 @@ __all__ = ["OpenIDConnect"]
 
 logger = logging.getLogger(__name__)
 
-
+def _json_loads(content):
+    if not isinstance(content, str):
+        content = content.decode('utf-8')
+    return json.loads(content)
 
 class OpenIDConnect:
     def __init__(
         self, app=None, credentials_store=None, http=None, time=None, urandom=None
     ):
+        if app is not None:
+            self.init_app(app)
 
-        app.config.from_file(app.config["OIDC_CLIENT_SECRETS"], load=json.load)
+    def init_app(self, app):
+        secrets = self.load_secrets(app)
+        self.client_secrets = list(secrets.values())[0]
+
+        app.config.setdefault("OIDC_ISSUER") = self.client_secrets["issuer"]
+        app.config.setdefault("OIDC_CLIENT_ID") = self.client_secrets["client_id"]
+        app.config.setdefault("OIDC_CLIENT_SECRET") = self.client_secrets["client_secret"]
+        app.config.setdefault("OIDC_USERINFO_URL") = self.client_secrets["userinfo_uri"]
+        app.config.setdefault("OIDC_SCOPES") = "openid profile email"
+        app.config.setdefault("OIDC_CLIENT_AUTH_METHOD") = "client_secret_post"
+        app.config.setdefault("OIDC_OPENID_CALLBACK") = "/oidc_callback"
+
+        #app.config.from_file(app.config["OIDC_CLIENT_SECRETS"], load=json.load)
         app.config.setdefault(
             "OIDC_SERVER_METADATA_URL",
             f"{app.config['OIDC_ISSUER']}/.well-known/openid-configuration",
@@ -57,9 +74,18 @@ class OpenIDConnect:
                 "token_endpoint_auth_method": app.config["OIDC_CLIENT_AUTH_METHOD"],
             },
         )
+
         app.route(app.config["OIDC_OPENID_CALLBACK"])(self._oidc_callback)
         app.before_request(self._before_request)
         app.after_request(self._after_request)
+
+    def load_secrets(self, app):
+        # Load client_secrets.json to pre-initialize some configuration
+        content = app.config['OIDC_CLIENT_SECRETS']
+        if isinstance(content, dict):
+            return content
+        else:
+            return _json_loads(open(content, 'r').read())
 
     def _before_request(self):
         self.check_token_expiry()
@@ -159,4 +185,3 @@ class OpenIDConnect:
         session.pop("token", None)
         session.pop("userinfo", None)
         return redirect("/")
-
